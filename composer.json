@@ -1,7 +1,7 @@
 {
-  "name": "wbb/mcping",
+  "name": "kxjhwbb/mcping",
   "autoload": {
-    "psr-4": { "wbb\\mcping\\": "lib/" }
+    "psr-4": { "mcping\\": "lib/" }
   },
   "require": {
     "ext-json": "*",

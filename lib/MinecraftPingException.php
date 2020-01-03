@@ -1,7 +1,7 @@
 <?php
 
 
-namespace wbb\mcping;
+namespace mcping;
 
 
 class MinecraftPingException extends \Exception
