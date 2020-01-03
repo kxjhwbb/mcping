@@ -1,19 +1,10 @@
 {
   "name": "kxjhwbb/mcping",
   "autoload": {
-    "psr-4": { "mcping\\": "lib/" }
+    "psr-4": { "mcping\\": "src/" }
   },
   "require": {
     "ext-json": "*",
     "ext-iconv": "*"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "6.2"
-  },
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "https://developer.aliyun.com/composer"
-    }
   }
 }

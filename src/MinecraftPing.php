@@ -3,6 +3,7 @@
 
 namespace mcping;
 
+use \Exception;
 
 class MinecraftPing
 {
@@ -89,10 +90,6 @@ class MinecraftPing
         $this->ServerAddress = $Address;
         $this->ServerPort = (int)$Port;
         $this->Timeout = (int)$Timeout;
-//        if( $ResolveSRV )
-//        {
-//            $this->ResolveSRV();
-//        }
         $this->Connect();
     }
 
@@ -116,7 +113,7 @@ class MinecraftPing
         if( !$this->Socket )
         {
             $this->Socket = null;
-            throw new \Exception( "Failed to connect ".$this->ServerAddress . ':' . $this->ServerPort.": $errno (".trim(iconv( 'GBK', 'UTF-8', $errstr)).")" );
+            throw new Exception( "Failed to connect ".$this->ServerAddress . ':' . $this->ServerPort.": $errno (".trim(iconv( 'GBK', 'UTF-8', $errstr)).")" );
         }
         // Set Read/Write timeout
         stream_set_timeout( $this->Socket, $this->Timeout );
@@ -146,33 +143,32 @@ class MinecraftPing
         {
             if (microtime(true) - $TimeStart > $this->Timeout)
             {
-                throw new MinecraftPingException( 'Server read timed out' );
+                throw new Exception( 'Server read timed out' );
             }
             $Remainder = $Length - StrLen( $Data );
             $block = fread( $this->Socket, $Remainder ); // and finally the json string
             // abort if there is no progress
             if (!$block)
             {
-                throw new MinecraftPingException( 'Server returned too few data' );
+                throw new Exception( 'Server returned too few data' );
             }
             $Data .= $block;
         } while( StrLen($Data) < $Length );
         if( $Data === FALSE )
         {
-            throw new MinecraftPingException( 'Server didn\'t return any data' );
+            throw new Exception( 'Server didn\'t return any data' );
         }
         $Data = JSON_Decode( $Data, true );
         if( JSON_Last_Error( ) !== JSON_ERROR_NONE )
         {
             if( Function_Exists( 'json_last_error_msg' ) )
             {
-                throw new MinecraftPingException( JSON_Last_Error_Msg( ) );
+                throw new Exception( JSON_Last_Error_Msg( ) );
             }
             else
             {
-                throw new MinecraftPingException( 'JSON parsing failed' );
+                throw new Exception( 'JSON parsing failed' );
             }
-            return FALSE;
         }
         $Data["Srv"] = $this->Srv;
         return $Data;
@@ -226,7 +222,7 @@ class MinecraftPing
             $i |= ( $k & 0x7F ) << $j++ * 7;
             if( $j > 5 )
             {
-                throw new MinecraftPingException( 'VarInt too big' );
+                throw new Exception( 'VarInt too big' );
             }
             if( ( $k & 0x80 ) != 128 )
             {
